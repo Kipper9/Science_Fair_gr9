@@ -4,7 +4,7 @@ completeSquares = 0
 Grid = []
 def MakeGrid(R,C):
   global Grid
-  for i in range(0,(R-1)*2+1):
+  for i in range(0,R):
     Grid.append([])
     if i%2 == 0:
       for x in range(0,C-1):
@@ -30,35 +30,37 @@ def click(row, col, turn,r,c):
   global completeSquares
   global Turn_over
   global Grid
-  if Grid[row][col] == 1 or Grid[row][col] == 2:
+  
+  if row > r+1 or col > c+1:
+    print('Invalid move')
+    Turn_over = False 
+  elif Grid[row][col] == 1 or Grid[row][col] == 2:
     print("There is already a line there.")
-
+    Turn_over = False
   else:
     Grid[row][col] = turn
     Turn_over = True
-    if len(Grid[row]) == 4:
+    if len(Grid[row]) == c-1:
       if row != 0:
         if Grid[row-1][col] != 0 and Grid[row-1][col+1] != 0 and Grid[row-2][col] != 0:
           Team_points[turn - 1] =+ 1
           print("1 point for team", turn)
           completeSquares += 1
           Turn_over = False
-
-      if row != r:
+      if row < r-1:
         if Grid[row+1][col] != 0 and Grid[row+1][col+1] != 0 and Grid[row+2][col] != 0:
           Team_points[turn - 1] =+ 1
           print("1 point for team", turn)
           completeSquares += 1
           Turn_over = False
-    
-    if len(Grid[row]) == 5:
+    if len(Grid[row]) == c:
       if col != 0:
         if Grid[row][col-1] != 0 and Grid[row-1][col-1] != 0 and Grid[row+1][col-1] != 0:
           Team_points[turn - 1] =+ 1
           print("1 point for team",turn)
           completeSquares += 1
           Turn_over = False
-      if col != c:
+      if col < c-1:
         if Grid[row-1][col] != 0 and Grid[row+1][col] != 0 and Grid[row][col+1] != 0:
           Team_points[turn - 1] =+ 1
           print("1 point for team", turn)
@@ -69,12 +71,12 @@ def play():
   global Grid
   global Team_points
   global Turn_over
-  Rows = int(input('How many rows: '))
+  Rows = (int(input('How many rows: ')) - 1) * 2 + 1
   Cols = int(input('How many Columns: '))
   Grid = MakeGrid(Rows,Cols)
   Turn = 1
   while not game_over(Rows,Cols):
-    while Turn_over == False:
+    while Turn_over == False or game_over(Rows,Cols):
       print("Player",Turn,"'s move")
       r = int(input("What row would you like to play: ")) - 1
       c = int(input("What column would you like to play: ")) - 1

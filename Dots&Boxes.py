@@ -2,7 +2,6 @@ Turn_over = False
 Team_points = [0,0]
 completeSquares = 0
 Grid = []
-
 def MakeGrid(R,C):
   global Grid
   for i in range(0,R):
@@ -101,6 +100,4 @@ def play():
     print("Tie, no one wins :(")
   for i in range(0,2):
     print('Team',i+1,'got',Team_points[i])
-
-
 play()

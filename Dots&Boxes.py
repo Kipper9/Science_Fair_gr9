@@ -14,7 +14,6 @@ def MakeGrid(R,C):
       for x in range(0,C):
         Grid[i].append(0)
   return Grid
-
 def game_over(m):
   global Turn_over
   global completeSquares
@@ -24,17 +23,14 @@ def game_over(m):
     return True
   else:
     return False
-
 def draw_Board():
   print("Board:")
   for i in Grid:
     print(i)
-
 def click(row, col, turn,r,c):
   global completeSquares
   global Turn_over
   global Grid
-  
   if row > r+1 or col > c+1:
     print('Invalid move')
     Turn_over = False 
@@ -70,7 +66,6 @@ def click(row, col, turn,r,c):
           print("1 point for team", turn)
           completeSquares += 1
           Turn_over = False
-
 def play():
   global Grid
   global Team_points
@@ -95,16 +90,13 @@ def play():
           Turn_over = True
     Turn_over = False
     Turn = -1 * Turn + 3
-
   print()
   print("Game over")
   print()
   if Team_points[1] > Team_points[0]:
     print("Team 2 wins!")
-
   elif Team_points[1] < Team_points[0]:
-    print("Team 1 wins!")
-  
+    print("Team 1 wins!") 
   elif Team_points[1] == Team_points[0]:
     print("Tie, no one wins :(")
   for i in range(0,2):

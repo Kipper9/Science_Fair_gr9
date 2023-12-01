@@ -31,7 +31,7 @@ def click(row, col, turn,r,c):
   global Turn_over
   global Grid
   global Team_points
-  if row > r+1 or col > c+1:
+  if row > r+1 or col >= len(Grid[row]):
     print('Invalid move')
     Turn_over = False 
   elif Grid[row][col] == 1 or Grid[row][col] == 2:
@@ -43,26 +43,26 @@ def click(row, col, turn,r,c):
     if len(Grid[row]) == c-1:
       if row != 0:
         if Grid[row-1][col] != 0 and Grid[row-1][col+1] != 0 and Grid[row-2][col] != 0:
-          Team_points[turn - 1] =+ 1
+          Team_points[turn - 1] += 1
           print("1 point for team", turn)
           completeSquares += 1
           Turn_over = False
       if row < r-1:
         if Grid[row+1][col] != 0 and Grid[row+1][col+1] != 0 and Grid[row+2][col] != 0:
-          Team_points[turn - 1] =+ 1
+          Team_points[turn - 1] += 1
           print("1 point for team", turn)
           completeSquares += 1
           Turn_over = False
     if len(Grid[row]) == c:
       if col != 0:
         if Grid[row][col-1] != 0 and Grid[row-1][col-1] != 0 and Grid[row+1][col-1] != 0:
-          Team_points[turn - 1] =+ 1
+          Team_points[turn - 1] += 1
           print("1 point for team",turn)
           completeSquares += 1
           Turn_over = False
       if col < c-1:
         if Grid[row-1][col] != 0 and Grid[row+1][col] != 0 and Grid[row][col+1] != 0:
-          Team_points[turn - 1] =+ 1
+          Team_points[turn - 1] += 1
           print("1 point for team", turn)
           completeSquares += 1
           Turn_over = False

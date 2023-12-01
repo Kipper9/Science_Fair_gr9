@@ -30,6 +30,7 @@ def click(row, col, turn,r,c):
   global completeSquares
   global Turn_over
   global Grid
+  global Team_points
   if row > r+1 or col > c+1:
     print('Invalid move')
     Turn_over = False 
@@ -99,5 +100,5 @@ def play():
   elif Team_points[1] == Team_points[0]:
     print("Tie, no one wins :(")
   for i in range(0,2):
-    print('Team',i+1,'got',Team_points[i])
+    print('Team',i+1,'got',Team_points[i],'points')
 play()

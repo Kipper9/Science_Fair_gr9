@@ -1,4 +1,4 @@
-from DotsAndBoxes import DotsAndBoxes
+from Game import DotsAndBoxes
 from collections import deque
 import random
 import numpy as np
@@ -45,5 +45,11 @@ def train(grid):
     
 
 if __name__ == '__main__':
-  grid = [] #TODO
+  grid = [
+    [0,0,0,0],
+    [0,0,0,0,0],
+    [0,0,0,0],
+    [0,0,0,0,0],
+    [0,0,0,0]
+    ] #TODO
   train(grid)

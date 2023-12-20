@@ -6,7 +6,9 @@ class DotsAndBoxes:
     self.cols = c
     self.isTurnOver = False
     self.grid = self.makeGrid()
+    self.isMoveValid = True
   def makeGrid(self):
+  
     grid = []
     for i in range(0,(self.rows-1)*2+1):
       grid.append([])
@@ -17,6 +19,13 @@ class DotsAndBoxes:
         for x in range(0,self.cols):
           grid[i].append(0)
     return grid
+
+  def ai_input(self):
+    output = []
+    for i in self.grid:
+      for x in i:
+        output.append(x)
+    return output
 
   def isGameOver(self):
     if self.completeSquares == (self.rows - 1) * (self.cols - 1):
@@ -37,6 +46,7 @@ class DotsAndBoxes:
     elif self.grid[row][col] == 1 or self.grid[row][col] == 2:
       print("There is already a line there.")
       self.isTurnOver = False
+      self.isMoveValid = False
 
     else:
       self.grid[row][col] = turn
@@ -73,7 +83,7 @@ class DotsAndBoxes:
 
   def gameStep(self,action,turn):
     self.click(action[0],action[1],turn)
-    return self.points, self.isTurnOver, self.isGameOver(), self.grid
+    return self.points, self.isTurnOver, self.isGameOver(), self.grid, self.isMoveValid
   
   def reset(self):
     self.points = [0,0]

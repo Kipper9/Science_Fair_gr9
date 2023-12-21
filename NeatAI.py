@@ -6,6 +6,7 @@ class AI:
     self.game = DotsAndBoxes(r,c)
     self.r =  r
     self.c = c
+    self.used = set()
 
   def test_ai(self):
     while not self.game.isGameOver():
@@ -34,40 +35,51 @@ class AI:
   def train_AI(self,genome1,genome2,config):
     net1 = neat.nn.FeedForwardNetwork.create(genome1,config)
     net2 = neat.nn.FeedForwardNetwork.create(genome2,config)
-    
-    turn = 1
+
     run = True
     while run:
-      while turn == 1:
-        output1 = net1.activate(self.game.ai_input())
-
-        decision1 = output1.index(max(output1))
-
-        move1 = self.interpret_input(decision1)
-        print(move1)
-        state = self.game.gameStep(move1, turn)
-
-        self.game.draw_board()
-        if state[2] == True:
-          self.calculate_fitness(genome1,genome2,state)
-          break
-        if state[1] == True:
-          turn = 2
+      self.turns(net1, 1)
       
-      while turn == 2:
-        output2 = net2.activate(self.game.ai_input())
+      if self.game.isGameOver():
+        self.calculate_fitness(net1, net2)
+        run = False
+      
+      self.game.isTurnOver = False
 
-        decision2 = output2.index(max(output2))
+      self.turns(net2, 2)
+      
+      if self.game.isGameOver():
+        self.calculate_fitness(net1, net2)
+        run = False
+      
+      self.game.isTurnOver = False
+  
+  def turns(self, genome, turn):
+    while not self.game.isTurnOver:
+      output = genome.activate(self.game.ai_input())
 
-        move2 = self.interpret_input(decision2)
-        state = self.game.gameStep(move2, turn)
+      newoutput = self.remove_used(output)
 
-        self.game.draw_board()
-        if state[2] == True:
-          self.calculate_fitness(genome1,genome2,state)
-          break
-        if state[1] == True:
-          turn = 1
+      decision = newoutput.index(max(newoutput))
+
+      print(decision)
+
+      self.used.add(decision)
+
+      move = self.interpret_input(decision)
+
+      self.game.gameStep(move, turn)
+
+      self.game.draw_board()
+      print()
+
+
+  def remove_used (self, output):
+    for i, v in enumerate(output):
+      if i in self.used:
+        output[i] = 0
+        
+    return output
 
   def interpret_input(self,input):
     r = 0
@@ -85,7 +97,7 @@ class AI:
         x -= self.c
 
     c = input - x
-    return [r - 1,c - 1]
+    return [r, c]
 
   def calculate_fitness(self, genome1, genome2, game_info):
     pass
@@ -108,7 +120,7 @@ def eval_genomes(genomes,config,):
 
 
 def run_neat(config):
-  # p = neat.Checkpointer.restore_checkpoint("neat-checkpointer-#")
+  # p = neat.Checkpointer.restore_checkpoint("neat-checkpointer-")
   p = neat.Population(config)
   p.add_reporter(neat.StdOutReporter(True))
   stats = neat.StatisticsReporter()

@@ -34,8 +34,11 @@ class DotsAndBoxes:
       return False
 
   def draw_board(self):
-    for i  in self.grid:
-      print(i)
+    for i, v  in enumerate(self.grid):
+      if i % 2 == 0:
+        print(f' ',v)
+      else:
+        print(v)
 
   def click(self, row, col,turn):
     

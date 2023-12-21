@@ -34,6 +34,10 @@ class DotsAndBoxes:
       return False
 
   def draw_board(self):
+    print('Score:')
+    print(f'Team 1: ',self.points[0])
+    print(f'Team 2: ',self.points[1])
+
     for i, v  in enumerate(self.grid):
       if i % 2 == 0:
         print(f' ',v)
@@ -52,7 +56,7 @@ class DotsAndBoxes:
       self.isMoveValid = False
 
     else:
-      self.grid[row][col] = turn
+      self.grid[row][col] = 1
       self.isTurnOver = True
       if len(self.grid[row]) == self.cols-1:
         if row != 0:

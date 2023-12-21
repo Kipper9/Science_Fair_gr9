@@ -39,7 +39,7 @@ class DotsAndBoxes:
 
   def click(self, row, col,turn):
     
-    if row > self.rows + 1 or col >= len(self.grid[row]):
+    if row > self.rows * 2 + 1 or col >= len(self.grid[row]):
       print('Invalid move')
       self.isTurnOver = False 
 

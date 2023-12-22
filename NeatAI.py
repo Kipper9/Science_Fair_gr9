@@ -1,6 +1,7 @@
 from Game import DotsAndBoxes
 import neat
 import os
+import time
 class AI:
   def __init__(self,r, c):
     self.game = DotsAndBoxes(r,c)
@@ -42,17 +43,23 @@ class AI:
       
       if self.game.isGameOver():
         self.calculate_fitness(net1, net2)
+        self.game.reset()
         run = False
       
       self.game.isTurnOver = False
+
+      time.sleep(1)
 
       self.turns(net2, 2)
       
       if self.game.isGameOver():
         self.calculate_fitness(net1, net2)
+        self.game.reset()
         run = False
       
       self.game.isTurnOver = False
+
+      time.sleep(1)
   
   def turns(self, genome, turn):
     while not self.game.isTurnOver:
@@ -72,7 +79,7 @@ class AI:
 
       self.game.draw_board()
       print()
-
+      print(f'Player ',turn,"'s move")
 
   def remove_used (self, output):
     for i, v in enumerate(output):
@@ -81,28 +88,28 @@ class AI:
         
     return output
 
-  def interpret_input(self,input):
-    r = 0
-    x = 0 
-    while x < input:
-      if r % 2 == 1:
-        x += self.c - 1
-      if r % 2 == 0:
-        x += self.c
-      r += 1
-    
-    if r % 2 == 1:
-        x -= self.c - 1
-    if r % 2 == 0:
-        x -= self.c
+  def interpret_input(self,input1):
+    row = 0
+    x = 0
+    n = 3
 
-    c = input - x
-    return [r, c]
+    while x + n < input1:
+      if row % 2 == 0:
+        x += self.c - 1
+        n = 4
+      else:
+        x += self.c
+        n = 3
+      
+      row += 1
+    
+    col = input1 - x
+
+    return [row, col]
 
   def calculate_fitness(self, genome1, genome2, game_info):
     pass
 
-  
 def eval_genomes(genomes,config,):
   width,height = 5,5
   for i,(genome_id1, genome1) in enumerate(genomes):
@@ -116,8 +123,6 @@ def eval_genomes(genomes,config,):
 
       game = AI(width,height)
       game.train_AI(genome1,genome2,config)
-  
-
 
 def run_neat(config):
   # p = neat.Checkpointer.restore_checkpoint("neat-checkpointer-")

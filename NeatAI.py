@@ -42,24 +42,20 @@ class AI:
       self.turns(net1, 1)
       
       if self.game.isGameOver():
-        self.calculate_fitness(net1, net2)
+        self.calculate_fitness(genome1, genome2, self.game.points[0], self.game.points[1])
         self.game.reset()
         run = False
       
       self.game.isTurnOver = False
-
-      time.sleep(1)
 
       self.turns(net2, 2)
       
       if self.game.isGameOver():
-        self.calculate_fitness(net1, net2)
+        self.calculate_fitness(genome1, genome2, self.game.points[0], self.game.points[1])
         self.game.reset()
         run = False
       
       self.game.isTurnOver = False
-
-      time.sleep(1)
   
   def turns(self, genome, turn):
     while not self.game.isTurnOver:
@@ -69,17 +65,15 @@ class AI:
 
       decision = newoutput.index(max(newoutput))
 
-      print(decision)
-
       self.used.add(decision)
 
       move = self.interpret_input(decision)
 
-      self.game.gameStep(move, turn)
+      state = self.game.gameStep(move, turn)
 
-      self.game.draw_board()
-      print()
-      print(f'Player ',turn,"'s move")
+      if state[4] == False:
+        self.game.completeSquares = 16
+        break
 
   def remove_used (self, output):
     for i, v in enumerate(output):
@@ -107,19 +101,21 @@ class AI:
 
     return [row, col]
 
-  def calculate_fitness(self, genome1, genome2, game_info):
-    pass
+  def calculate_fitness(self, genome1, genome2, points1, points2):
+    genome1.fitness += points1
+    genome2.fitness += points2
 
 def eval_genomes(genomes,config,):
   width,height = 5,5
   for i,(genome_id1, genome1) in enumerate(genomes):
     if i  == len(genomes) - 1:
       break
-
-    genome1.fitness = 0
+    if genome1.fitness == None:
+      genome1.fitness = 0
 
     for genome_id2,genome2 in genomes[i+1:]:
-      genome2.fitness = 0 if genome2.fitness == None else genome2.finess
+      if genome2.fitness == None:
+        genome2.fitness = 0
 
       game = AI(width,height)
       game.train_AI(genome1,genome2,config)

@@ -2,6 +2,8 @@ from Game import DotsAndBoxes
 import neat
 import os
 import time
+import pickle
+
 class AI:
   def __init__(self,r, c):
     self.game = DotsAndBoxes(r,c)
@@ -9,7 +11,7 @@ class AI:
     self.c = c
     self.used = set()
 
-  def test_ai(self):
+  def test_ai(self, AI):
     while not self.game.isGameOver():
       turn = 1
 
@@ -22,14 +24,8 @@ class AI:
         if state[2] == True:
           break
 
-      while turn == 2:
-        p2_move = [int(input('What row: ')) - 1,int(input('What column: ')) - 1]
-        state = self.game.gameStep(p2_move,turn)
-        self.game.draw_board()
-        if state[1] == True:
-          turn = 1
-        if state[2] == True:
-          break
+      self.turns(AI,2)
+      self.game.draw_board()
     
     print('Score:',state[0])
 
@@ -121,14 +117,25 @@ def eval_genomes(genomes,config,):
       game.train_AI(genome1,genome2,config)
 
 def run_neat(config):
-  # p = neat.Checkpointer.restore_checkpoint("neat-checkpointer-")
-  p = neat.Population(config)
+  p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-5")
+# p = neat.Population(config)
   p.add_reporter(neat.StdOutReporter(True))
   stats = neat.StatisticsReporter()
   p.add_reporter(stats)
   p.add_reporter(neat.Checkpointer(1))
 
   winner = p.run(eval_genomes, 50)
+  with open ('best.pickle','wb') as f:
+    pickle.dump(winner, f)
+
+def test_AI(config):
+  with open('best.pickle','rd') as f:
+    winner = pickle.load(f)
+
+  game = AI(5,5)
+
+  game.test_ai(winner)
+
 
 if __name__ == "__main__":
   local_dir = os.path.dirname(__file__)
@@ -139,3 +146,4 @@ if __name__ == "__main__":
     neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)
   
   run_neat(config)
+ # test_AI(config)

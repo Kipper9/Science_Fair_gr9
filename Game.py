@@ -47,11 +47,9 @@ class DotsAndBoxes:
   def click(self, row, col,turn):
     
     if row > self.rows * 2 or col >= len(self.grid[row]):
-      print('Invalid move')
       self.isTurnOver = False 
 
     elif self.grid[row][col] == 1 or self.grid[row][col] == 2:
-      print("There is already a line there.")
       self.isTurnOver = False
       self.isMoveValid = False
 
@@ -62,14 +60,12 @@ class DotsAndBoxes:
         if row != 0:
           if self.grid[row-1][col] != 0 and self.grid[row-1][col+1] != 0 and self.grid[row-2][col] != 0:
             self.points[turn - 1] += 1
-            print("1 point for team", turn)
             self.completeSquares += 1
             self.isTurnOver = False
 
         if row < self.rows-1:
           if self.grid[row+1][col] != 0 and self.grid[row+1][col+1] != 0 and self.grid[row+2][col] != 0:
             self.points[turn - 1] += 1
-            print("1 point for team", turn)
             self.completeSquares += 1
             self.isTurnOver = False
 
@@ -77,14 +73,12 @@ class DotsAndBoxes:
         if col != 0:
           if self.grid[row][col-1] != 0 and self.grid[row-1][col-1] != 0 and self.grid[row+1][col-1] != 0:
             self.points[turn - 1] += 1
-            print("1 point for team",turn)
             self.completeSquares += 1
             self.isTurnOver = False
 
         if col < self.cols-1:
           if self.grid[row-1][col] != 0 and self.grid[row+1][col] != 0 and self.grid[row][col+1] != 0:
             self.points[turn - 1] += 1
-            print("1 point for team", turn)
             self.completeSquares += 1
             self.isTurnOver = False
 

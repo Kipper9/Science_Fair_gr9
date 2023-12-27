@@ -57,8 +57,6 @@ class DotsAndBoxes:
     if move[0] % 2 == 1:
       output = output - (self.cols - move[1])
 
-
-
   def click(self, row, col,turn):
     
     if row > self.rows * 2 or col >= len(self.grid[row]):

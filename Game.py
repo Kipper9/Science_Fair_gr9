@@ -44,6 +44,21 @@ class DotsAndBoxes:
       else:
         print(v)
 
+  def invert_move(self, move):
+    output = 0
+    for i in range(0, move[0]):
+      if i % 2 == 0:
+        output += self.cols - 1
+      if i % 2 == 1:
+        output += self.cols
+    
+    if move[0] % 2 == 0:
+      output = output - (self.cols - 1 - move[1])
+    if move[0] % 2 == 1:
+      output = output - (self.cols - move[1])
+
+
+
   def click(self, row, col,turn):
     
     if row > self.rows * 2 or col >= len(self.grid[row]):

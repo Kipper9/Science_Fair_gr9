@@ -1,6 +1,5 @@
 import pygame
 from Game import DotsAndBoxes
-import time
 
 pygame.init()
 
@@ -54,15 +53,22 @@ class Game:
         
         elif event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
           mouse_x, mouse_y = pygame.mouse.get_pos()
+          print("x:", mouse_x)
+          print('y:',mouse_y)
           position = self.get_clicked_line(mouse_x,mouse_y)
+          print()
+          print('pos:',position)
           if position == False:
             pass
           else:
             state = self.game.gameStep(position,self.turn)
             self.game.draw_board(self.turn)
           
-          if state[1] == False:
-            self.turn = (self.turn - 3) * -1
+          if state[1]:
+            if self.turn == 1:
+              self.turn = 2
+            elif self.turn == 2:
+              self.turn = 1
           
           if state[2] == True:
             self.run = False
@@ -79,6 +85,12 @@ class Game:
 
     if width_1 == width_2:
       return False
+
+    if row % 2 == 1:
+      col = col // 2
+
+    if row % 2 == 0:
+      col = col // 2
 
     return [row, col] 
   

@@ -4,7 +4,9 @@ from Game import DotsAndBoxes
 pygame.init()
 
 class Game:
+  
   def __init__(self, rows, cols):
+    self.score_board = pygame.font.SysFont("comicsans", 50)
     self.game = DotsAndBoxes(rows, cols)
     self.w = (cols + 1) * 100
     self.h = (rows + 1) * 100
@@ -29,6 +31,16 @@ class Game:
 
   def draw_board(self):
     self.window.fill(self.white)
+    left_score_text = self.score_board.render(
+      f'{self.game.points[0]}', 1, self.black
+    )
+    right_score_text = self.score_board.render(
+      f'{self.game.points[1]}', 1, self.black
+    )
+    WIDTH = self.w
+    self.window.blit(left_score_text, (WIDTH//4 - left_score_text.get_width()//2, 20))
+    self.window.blit(right_score_text, (WIDTH * (3/4) -
+                                right_score_text.get_width()//2, 20))
     for i in self.dots:
       for x in i:
         pygame.draw.circle(self.window, self.black, x[0],x[1])

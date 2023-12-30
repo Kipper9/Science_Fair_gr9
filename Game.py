@@ -40,15 +40,14 @@ class DotsAndBoxes:
     print('Score:')
     print(f'Team 1: {self.points[0]}')
     print(f'Team 2: {self.points[1]}')
-    if self.isTurnOver == True:
-      print()
-      print('Their turn is over')
-
     for i, v  in enumerate(self.grid):
       if i % 2 == 0:
         print(f' ',v)
       else:
         print(v)
+    if self.isTurnOver:
+      print()
+      print('Their turn is over')
 
   def invert_move(self, move):
     output = 0

@@ -33,10 +33,16 @@ class DotsAndBoxes:
     else:
       return False
 
-  def draw_board(self):
+  def draw_board(self,turn):
+    print()
+    print(f"Player {turn}'s move")
+    print()
     print('Score:')
-    print(f'Team 1: ',self.points[0])
-    print(f'Team 2: ',self.points[1])
+    print(f'Team 1: {self.points[0]}')
+    print(f'Team 2: {self.points[1]}')
+    if self.isTurnOver == True:
+      print()
+      print('Their turn is over')
 
     for i, v  in enumerate(self.grid):
       if i % 2 == 0:

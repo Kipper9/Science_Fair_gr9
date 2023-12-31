@@ -74,8 +74,6 @@ class AI:
       print(move)
 
       state = self.game.gameStep(move, turn)
-
-
       if decision == 0 and 0 in self.used:
         decision = random.randint(0, 40)
 

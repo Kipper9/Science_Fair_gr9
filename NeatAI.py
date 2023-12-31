@@ -18,18 +18,19 @@ class AI:
 
       while turn == 1:
         p1_move = [int(input('What row: ')),int(input('What column: '))]
-        state = self.game.gameStep(p1_move,turn)
-        self.game.draw_board()
+        state = self.game.gameStep(p1_move, turn)
+        self.game.draw_board(turn)
         pos = self.game.invert_move(p1_move)
         self.used.add(pos)
         print()
         if state[1] == True:
           turn = 2
+          self.game.isTurnOver = False
         if state[2] == True:
           break
 
       self.turns(net, 2)
-      self.game.draw_board()
+      self.game.draw_board(turn)
       print()
     
     print('Score:',state[0])
@@ -67,11 +68,13 @@ class AI:
 
       self.used.add(decision)
 
+      print(decision)
       move = self.interpret_input(decision)
+
+      print(move)
 
       state = self.game.gameStep(move, turn)
 
-      self.game.draw_board()
 
       if state[4] == False:
         self.game.completeSquares = 16

@@ -1,13 +1,15 @@
 import pygame
 from Game import DotsAndBoxes
-
-pygame.init()
+from NeatAI import AI
+import pickle
+import neat
+import os
+import random
 
 class Game:
-  
-  def __init__(self, rows, cols):
+  def __init__(self, rows, cols, config):
     self.score_board = pygame.font.SysFont("comicsans", 50)
-    self.game = DotsAndBoxes(rows, cols)
+    self.trainer = AI(rows,cols)
     self.w = (cols + 1) * 100
     self.h = (rows + 1) * 100
     self.window = pygame.display.set_mode((self.w, self.h))
@@ -20,6 +22,8 @@ class Game:
     self.red = (255,0,0)
     self.white = (255,255,255)
     self.turn = 1
+    self.winner = False
+    self.config = config
 
   def create_dots(self, c, r):
     grid = []
@@ -29,13 +33,17 @@ class Game:
         grid[i].append([(100 * i + 100, x * 100 + 100), 10])
     return grid
 
+  def get_genome(self):
+    with open('best.pickle','rb') as f:
+      self.winner = pickle.load(f)
+
   def draw_board(self):
     self.window.fill(self.white)
     left_score_text = self.score_board.render(
-      f'{self.game.points[0]}', 1, self.black
+      f'{self.trainer.game.points[0]}', 1, self.black
     )
     right_score_text = self.score_board.render(
-      f'{self.game.points[1]}', 1, self.black
+      f'{self.trainer.game.points[1]}', 1, self.black
     )
     WIDTH = self.w
     self.window.blit(left_score_text, (WIDTH//4 - left_score_text.get_width()//2, 20))
@@ -45,7 +53,7 @@ class Game:
       for x in i:
         pygame.draw.circle(self.window, self.black, x[0],x[1])
     
-    for val, i in enumerate(self.game.grid):
+    for val, i in enumerate(self.trainer.game.grid):
       for id, x in enumerate(i):
         if x == 1:
           if val % 2 == 0:
@@ -73,8 +81,8 @@ class Game:
           if position == False:
             pass
           else:
-            state = self.game.gameStep(position,self.turn)
-            self.game.draw_board(self.turn)
+            state = self.trainer.game.gameStep(position,self.turn)
+            self.trainer.game.draw_board(self.turn)
           
           if state[1]:
             if self.turn == 1:
@@ -84,6 +92,28 @@ class Game:
           
           if state[2] == True:
             self.run = False
+          
+          else:
+            net = neat.nn.FeedForwardNetwork.create(self.winner,self.config)
+            while not self.trainer.game.isTurnOver:
+              output = net.activate(self.trainer.game.ai_input())
+
+              newoutput = self.trainer.remove_used(output)
+
+              decision = newoutput.index(max(newoutput))
+
+              self.trainer.used.add(decision)
+
+              if decision == 0 and 0 in self.trainer.used:
+
+
+              move = self.trainer.interpret_input(decision)
+
+              print(move)
+
+              state = self.trainer.game.gameStep(move, self.turn)
+
+
 
   
   def get_clicked_line(self,x,y):
@@ -121,9 +151,19 @@ class Game:
       col += 1
     return col, width
 
+if __name__ == "__main__":
+  pygame.init()
 
-game = Game(int(input('How many rows: ')), int(input('How many colunms: ')))
+  local_dir = os.path.dirname(__file__)
 
-game.game_loop()
+  config_path = os.path.join(local_dir, "config.txt")
 
-pygame.quit()
+  config = neat.Config(neat.DefaultGenome,neat.DefaultReproduction,\
+      neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)
+
+  game = Game(int(input('How many rows: ')), int(input('How many colunms: ')), config)
+
+  game.get_genome()
+  game.game_loop()
+
+  pygame.quit()

@@ -67,16 +67,13 @@ class AI:
       decision = newoutput.index(max(newoutput))
 
       self.used.add(decision)
-
-      print(decision)
-      move = self.interpret_input(decision)
-
-      print(move)
-
-      state = self.game.gameStep(move, turn)
       if decision == 0 and 0 in self.used:
         decision = random.randint(0, 40)
 
+      move = self.interpret_input(decision)
+
+      state = self.game.gameStep(move, turn)
+      
   def remove_used (self, output):
     for i, v in enumerate(output):
       if i in self.used:

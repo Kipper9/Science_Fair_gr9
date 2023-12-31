@@ -93,25 +93,25 @@ class Game:
           if state[2] == True:
             self.run = False
           
-          else:
-            net = neat.nn.FeedForwardNetwork.create(self.winner,self.config)
-            while not self.trainer.game.isTurnOver:
-              output = net.activate(self.trainer.game.ai_input())
+          net = neat.nn.FeedForwardNetwork.create(self.winner,self.config)
 
-              newoutput = self.trainer.remove_used(output)
+          self.trainer.game.isTurnOver = False
 
-              decision = newoutput.index(max(newoutput))
+          while not self.trainer.game.isTurnOver:
+            output = net.activate(self.trainer.game.ai_input())
 
-              self.trainer.used.add(decision)
+            newoutput = self.trainer.remove_used(output)
 
-              if decision == 0 and 0 in self.trainer.used:
+            decision = newoutput.index(max(newoutput))
+            print(decision)
+            self.trainer.used.add(decision)
 
+            if decision == 0 and 0 in self.trainer.used:
+              decision = random.randint(0, 40)
 
-              move = self.trainer.interpret_input(decision)
+            move = self.trainer.interpret_input(decision)
 
-              print(move)
-
-              state = self.trainer.game.gameStep(move, self.turn)
+            state = self.trainer.game.gameStep(move, self.turn)
 
 
 
@@ -161,7 +161,7 @@ if __name__ == "__main__":
   config = neat.Config(neat.DefaultGenome,neat.DefaultReproduction,\
       neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)
 
-  game = Game(int(input('How many rows: ')), int(input('How many colunms: ')), config)
+  game = Game(5, 5, config)
 
   game.get_genome()
   game.game_loop()

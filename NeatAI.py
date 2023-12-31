@@ -1,8 +1,8 @@
 from Game import DotsAndBoxes
 import neat
 import os
-import time
 import pickle
+import random
 
 class AI:
   def __init__(self,r, c):
@@ -76,9 +76,8 @@ class AI:
       state = self.game.gameStep(move, turn)
 
 
-      if state[4] == False:
-        self.game.completeSquares = 16
-        break
+      if decision == 0 and 0 in self.used:
+        decision = random.randint(0, 40)
 
   def remove_used (self, output):
     for i, v in enumerate(output):
@@ -157,5 +156,4 @@ if __name__ == "__main__":
   config = neat.Config(neat.DefaultGenome,neat.DefaultReproduction,\
     neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)
   
-#  run_neat(config)
-  test_AI(config)
+  run_neat(config)

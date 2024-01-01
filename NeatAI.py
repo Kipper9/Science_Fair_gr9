@@ -59,16 +59,26 @@ class AI:
       self.game.isTurnOver = False
   
   def turns(self, net, turn):
+    state = [0,0,0,0,0]
     while not self.game.isTurnOver:
       output = net.activate(self.game.ai_input())
 
       newoutput = self.remove_used(output)
 
       decision = newoutput.index(max(newoutput))
-
+      
+      if decision in self.used:
+        rangea = 40 - len(self.used)
+        print(rangea)
+        self.game.draw_board(turn)
+        lista = list(self.used)
+        lista.sort
+        decision = random.randint(0, rangea)
+        for i in lista:
+          if i <= decision:
+            decision += 1
+      
       self.used.add(decision)
-      if decision == 0 and 0 in self.used:
-        decision = random.randint(0, 40)
 
       move = self.interpret_input(decision)
 
@@ -118,6 +128,7 @@ def eval_genomes(genomes,config):
         genome2.fitness = 0
 
       game = AI(width,height)
+      print('New Game!')
       game.train_AI(genome1,genome2,config)
       games_played += 1
   print(games_played)

@@ -84,11 +84,11 @@ class Game:
             if position:
               self.state = self.trainer.game.gameStep(position,self.turn)
               self.trainer.game.draw_board(self.turn)
+
+              self.draw_board()
               
-              if self.turn == 1:
+              if self.trainer.game.isTurnOver == True:
                 self.turn = 2
-              elif self.turn == 2:
-                self.turn = 1
               
               if self.state[2] == True:
                 self.run = False
@@ -98,6 +98,9 @@ class Game:
       self.trainer.game.isTurnOver = False
 
       self.trainer.turns(net,2)
+      self.turn = 1
+      if self.state[2] == True:
+        self.run = False
   
   def normal_game_loop(self):
     while self.run:
@@ -177,7 +180,7 @@ if __name__ == "__main__":
   game = Game(5, 5, config)
 
   game.get_genome()
-  game.normal_game_loop()
-  #game.ai_game_loop()
+  #game.normal_game_loop()
+  game.ai_game_loop()
 
   pygame.quit()

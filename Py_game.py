@@ -24,6 +24,7 @@ class Game:
     self.turn = 1
     self.winner = False
     self.config = config
+    self.state = False
 
   def create_dots(self, c, r):
     grid = []
@@ -64,7 +65,41 @@ class Game:
 
     pygame.display.update()
 
-  def game_loop (self):
+  def ai_game_loop (self):
+    while self.run:
+      self.draw_board()
+      while self.turn == 1:
+        for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+            self.run = False
+          
+          elif event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            print("x:", mouse_x)
+            print('y:',mouse_y)
+            position = self.get_clicked_line(mouse_x,mouse_y)
+            print()
+            print('pos:',position)
+
+            if position:
+              self.state = self.trainer.game.gameStep(position,self.turn)
+              self.trainer.game.draw_board(self.turn)
+              
+              if self.turn == 1:
+                self.turn = 2
+              elif self.turn == 2:
+                self.turn = 1
+              
+              if self.state[2] == True:
+                self.run = False
+          
+      net = neat.nn.FeedForwardNetwork.create(self.winner,self.config)
+
+      self.trainer.game.isTurnOver = False
+
+      self.trainer.turns(net,2)
+  
+  def normal_game_loop(self):
     while self.run:
       self.draw_board()
       for event in pygame.event.get():
@@ -84,38 +119,16 @@ class Game:
             state = self.trainer.game.gameStep(position,self.turn)
             self.trainer.game.draw_board(self.turn)
           
-          if state[1]:
-            if self.turn == 1:
-              self.turn = 2
-            elif self.turn == 2:
-              self.turn = 1
-          
-          if state[2] == True:
-            self.run = False
-          
-          net = neat.nn.FeedForwardNetwork.create(self.winner,self.config)
-
-          self.trainer.game.isTurnOver = False
-
-          while not self.trainer.game.isTurnOver:
-            output = net.activate(self.trainer.game.ai_input())
-
-            newoutput = self.trainer.remove_used(output)
-
-            decision = newoutput.index(max(newoutput))
-            print(decision)
-            self.trainer.used.add(decision)
-
-            if decision == 0 and 0 in self.trainer.used:
-              decision = random.randint(0, 40)
-
-            move = self.trainer.interpret_input(decision)
-
-            state = self.trainer.game.gameStep(move, self.turn)
-
-
-
-  
+          if position:
+            if state[1]:
+              if self.turn == 1:
+                self.turn = 2
+              elif self.turn == 2:
+                self.turn = 1
+            
+            if state[2] == True:
+              self.run = False
+    
   def get_clicked_line(self,x,y):
     if x < 90 or x > (self.w - 90):
       return False
@@ -164,6 +177,7 @@ if __name__ == "__main__":
   game = Game(5, 5, config)
 
   game.get_genome()
-  game.game_loop()
+  game.normal_game_loop()
+  #game.ai_game_loop()
 
   pygame.quit()

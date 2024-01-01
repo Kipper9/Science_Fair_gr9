@@ -68,9 +68,9 @@ class AI:
       decision = newoutput.index(max(newoutput))
       
       if decision in self.used:
-        rangea = 40 - len(self.used)
-        print(rangea)
-        self.game.draw_board(turn)
+        rangea = 41 - len(self.used)
+        if rangea < 0:
+          break
         lista = list(self.used)
         lista.sort
         decision = random.randint(0, rangea)
@@ -128,7 +128,6 @@ def eval_genomes(genomes,config):
         genome2.fitness = 0
 
       game = AI(width,height)
-      print('New Game!')
       game.train_AI(genome1,genome2,config)
       games_played += 1
   print(games_played)

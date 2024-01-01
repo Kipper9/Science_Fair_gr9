@@ -64,12 +64,14 @@ class DotsAndBoxes:
 
   def click(self, row, col,turn):
     
-    if row > self.rows * 2 or col >= len(self.grid[row]):
+    if row > self.rows * 2 - 2 or col >= len(self.grid[0 if row % 2 == 0 else 1]) or row < 0 or col < 0:
       self.isTurnOver = False 
+      pass
 
-    elif self.grid[row][col] == 1 or self.grid[row][col] == 2:
+    elif self.grid[row][col] == 1:
       self.isTurnOver = False
       self.isMoveValid = False
+      pass
 
     else:
       self.grid[row][col] = 1
@@ -81,7 +83,7 @@ class DotsAndBoxes:
             self.completeSquares += 1
             self.isTurnOver = False
 
-        if row < self.rows-1:
+        if row < self.rows * 2 - 2:
           if self.grid[row+1][col] != 0 and self.grid[row+1][col+1] != 0 and self.grid[row+2][col] != 0:
             self.points[turn - 1] += 1
             self.completeSquares += 1
@@ -94,7 +96,7 @@ class DotsAndBoxes:
             self.completeSquares += 1
             self.isTurnOver = False
 
-        if col < self.cols-1:
+        if col < self.cols - 1:
           if self.grid[row-1][col] != 0 and self.grid[row+1][col] != 0 and self.grid[row][col+1] != 0:
             self.points[turn - 1] += 1
             self.completeSquares += 1

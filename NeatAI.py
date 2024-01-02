@@ -10,6 +10,7 @@ class AI:
     self.r =  r
     self.c = c
     self.used = set()
+    self.total = 0
 
   def test_ai(self, genome, config):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -113,24 +114,29 @@ class AI:
   def calculate_fitness(self, genome1, genome2, points1, points2):
     genome1.fitness += points1
     genome2.fitness += points2
+    self.total = points1 + points2
 
 def eval_genomes(genomes,config):
   width,height = 5,5
-  games_played = 0
+  games_played = []
   for i,(genome_id1, genome1) in enumerate(genomes):
+    totale = 0 
     if i  == len(genomes) - 1:
       break
     if genome1.fitness == None:
       genome1.fitness = 0
 
-    for genome_id2,genome2 in genomes[i + 1:]:
+    for genome_id2,genome2 in genomes[i:]:
       if genome2.fitness == None:
         genome2.fitness = 0
-
+ 
       game = AI(width,height)
       game.train_AI(genome1,genome2,config)
-      games_played += 1
-  print(games_played)
+      if game.total != 16:
+        print("('_')")
+
+
+  print(f'{totale} games were played by genome 1.')
 
 def run_neat(config):
   #p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-11")

@@ -1,6 +1,5 @@
 class DotsAndBoxes:
   def __init__(self,r,c):
-    self.completeSquares = 0
     self.points = [0,0]
     self.rows = r
     self.cols = c
@@ -28,7 +27,7 @@ class DotsAndBoxes:
     return output
 
   def isGameOver(self):
-    if self.completeSquares == (self.rows - 1) * (self.cols - 1):
+    if  self.points[0] + self.points[1] == (self.rows - 1) * (self.cols - 1):
       return True
     else:
       return False
@@ -80,26 +79,22 @@ class DotsAndBoxes:
         if row != 0:
           if self.grid[row-1][col] != 0 and self.grid[row-1][col+1] != 0 and self.grid[row-2][col] != 0:
             self.points[turn - 1] += 1
-            self.completeSquares += 1
             self.isTurnOver = False
 
         if row < self.rows * 2 - 2:
           if self.grid[row+1][col] != 0 and self.grid[row+1][col+1] != 0 and self.grid[row+2][col] != 0:
             self.points[turn - 1] += 1
-            self.completeSquares += 1
             self.isTurnOver = False
 
       if len(self.grid[row]) == self.cols:
         if col != 0:
           if self.grid[row][col-1] != 0 and self.grid[row-1][col-1] != 0 and self.grid[row+1][col-1] != 0:
             self.points[turn - 1] += 1
-            self.completeSquares += 1
             self.isTurnOver = False
 
         if col < self.cols - 1:
           if self.grid[row-1][col] != 0 and self.grid[row+1][col] != 0 and self.grid[row][col+1] != 0:
             self.points[turn - 1] += 1
-            self.completeSquares += 1
             self.isTurnOver = False
 
   def gameStep(self,action,turn):
@@ -110,4 +105,3 @@ class DotsAndBoxes:
     self.points = [0,0]
     self.isTurnOver = False
     self.grid = self.makeGrid()
-    self.completeSquares = 0

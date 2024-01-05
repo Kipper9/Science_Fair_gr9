@@ -127,7 +127,6 @@ class AI:
 
 def eval_genomes(genomes,config):
   width,height = 5,5
-  games_played = []
   for (i,genome) in genomes:
     genome.fitness = 0
   for i,(genome_id1, genome1) in enumerate(genomes):
@@ -142,8 +141,7 @@ def eval_genomes(genomes,config):
  
       game = AI(width,height)
       game.train_AI(genome1,genome2,config)
-      if game.total != 16:
-        print("('_')")
+
     game.test_ai(genome1, config)
 
 def run_neat(config):
@@ -155,11 +153,11 @@ def run_neat(config):
   p.add_reporter(neat.Checkpointer(50))
 
   winner = p.run(eval_genomes, 100)
-  with open ('bester.pickle','wb') as f:
+  with open ('data/best.pickle','wb') as f:
     pickle.dump(winner, f)
 
 def test_AI(config):
-  with open('best.pickle','rb') as f:
+  with open('data/best.pickle','rb') as f:
     winner = pickle.load(f)
 
   game = AI(5,5)

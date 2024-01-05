@@ -16,13 +16,16 @@ class AI:
     self.used = set()
     self.total = 0
 
-  def test_ai(self, genome, config):
+  def test_ai(self, genome, config, width, height):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
-
+    
     while not self.game.isGameOver():
+      print('game is not over')
+
       turn = 1
 
       while turn == 1:
+        print('random')
         if self.game.isGameOver():
           break
 
@@ -36,14 +39,19 @@ class AI:
         lista.sort()
 
         decision = random.randint(0, rangea)
+
         for i in lista:
           if i <= decision:
             decision += 1
+
         self.used.add(decision)
 
         move = self.interpret_input(decision)
 
         state = self.game.gameStep(move, turn)
+
+        if self.game.isTurnOver:
+          turn = 2
 
       if self.game.isGameOver():
         break
@@ -133,8 +141,8 @@ class AI:
     self.total = points1 + points2
 
 def eval_genomes(genomes,config):
-  width,height = 5,5
-  
+  width, height = 5, 5
+
   for (i,genome) in genomes:
     genome.fitness = 0
 
@@ -148,18 +156,16 @@ def eval_genomes(genomes,config):
       genome1.fitness = 0
 
     for genome_id2,genome2 in genomes[i:]:
-      print('Running')
 
       if genome2.fitness == None:
         genome2.fitness = 0
  
       game = AI(width,height)
 
-      game.train_AI(genome1,genome2,config)
+      game.train_AI(genome1, genome2, config)
 
-    print('testing')
-
-    game.test_ai(genome1, config)
+    game = AI(width, height)
+    game.test_ai(genome1, config, width, height)
 
 def run_neat(config):
   # p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-2185")

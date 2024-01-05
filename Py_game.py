@@ -5,6 +5,7 @@ import pickle
 import neat
 import os
 import random
+import time
 
 class Game:
   def __init__(self, rows, cols, config):
@@ -35,7 +36,7 @@ class Game:
     return grid
 
   def get_genome(self):
-    with open('best.pickle','rb') as f:
+    with open('bester.pickle','rb') as f:
       self.winner = pickle.load(f)
 
   def draw_board(self):
@@ -131,7 +132,60 @@ class Game:
             
             if state[2] == True:
               self.run = False
-    
+
+  def test_ai_random(self):
+
+    while self.run:
+      self.draw_board()
+      self.turn = 1
+      while self.turn == 1:
+        for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+            self.run = False
+
+        if self.trainer.game.isGameOver():
+          break
+
+        rangea = 41 - len(self.trainer.used)
+
+        lista = list(self.trainer.used)
+
+        lista.sort()
+
+        decision = random.randint(0, rangea)
+
+        for i in lista:
+          if i <= decision:
+            decision += 1
+
+        self.trainer.used.add(decision)
+
+        move = self.trainer.interpret_input(decision)
+
+        self.state = self.trainer.game.gameStep(move, self.turn)
+
+        if self.state[1]:
+          self.turn = 2
+      
+      if self.state[2] == True:
+        self.run = False
+
+      self.draw_board()
+          
+      net = neat.nn.FeedForwardNetwork.create(self.winner,self.config)
+
+      self.trainer.game.isTurnOver = False
+
+      self.trainer.turns(net,2)
+      self.turn = 1
+      if self.trainer.game.points[0] + self.trainer.game.points[1] == 16:
+        self.run = False
+    points = self.trainer.game.points
+    self.run = True
+    self.trainer.used = set()
+    self.trainer.game.reset()
+    return points
+  
   def get_clicked_line(self,x,y):
     if x < 90 or x > (self.w - 90):
       return False
@@ -167,6 +221,24 @@ class Game:
       col += 1
     return col, width
 
+def test_ai(game):
+  ave = 0
+  wins = 0
+  totalpoints = 0
+  for i in range(0,1001):
+    points = game.test_ai_random()
+    
+    if points[0] < points[1]:
+      wins += 1
+
+    totalpoints += points[1]
+    ave = (ave + points[1]) / (i + 1)
+    
+  
+  print(f"The AI averaged {ave} points per game agains't a randomized player")
+  print(f"The AI totaled {totalpoints} points")
+  print(f"The AI won {wins} times agains't a randomized player")
+
 if __name__ == "__main__":
   pygame.init()
 
@@ -180,7 +252,10 @@ if __name__ == "__main__":
   game = Game(5, 5, config)
 
   game.get_genome()
-  #game.normal_game_loop()
-  game.ai_game_loop()
+  # game.normal_game_loop()
+  # game.ai_game_loop()
+  test_ai(game)
+  
+
 
   pygame.quit()

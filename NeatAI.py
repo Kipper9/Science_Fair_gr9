@@ -142,11 +142,11 @@ def run_neat(config):
   p.add_reporter(neat.Checkpointer(1))
 
   winner = p.run(eval_genomes, 50)
-  with open ('best.pickle','wb') as f:
+  with open ('data/best.pickle','wb') as f:
     pickle.dump(winner, f)
 
 def test_AI(config):
-  with open('best.pickle','rb') as f:
+  with open('data/best.pickle','rb') as f:
     winner = pickle.load(f)
 
   game = AI(5,5)

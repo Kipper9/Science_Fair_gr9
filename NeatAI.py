@@ -15,19 +15,26 @@ class AI:
   def reset(self):
     self.used = set()
     self.total = 0
+
   def test_ai(self, genome, config):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
+
     while not self.game.isGameOver():
       turn = 1
 
       while turn == 1:
         if self.game.isGameOver():
           break
+
         rangea = 41 - len(self.used)
+
         if rangea < 0:
           break
+
         lista = list(self.used)
+
         lista.sort()
+
         decision = random.randint(0, rangea)
         for i in lista:
           if i <= decision:
@@ -127,20 +134,30 @@ class AI:
 
 def eval_genomes(genomes,config):
   width,height = 5,5
+  
   for (i,genome) in genomes:
     genome.fitness = 0
+
   for i,(genome_id1, genome1) in enumerate(genomes):
+    print('New genome')
+
     if i  == len(genomes) - 1:
       break
+
     if genome1.fitness == None:
       genome1.fitness = 0
 
     for genome_id2,genome2 in genomes[i:]:
+      print('Running')
+
       if genome2.fitness == None:
         genome2.fitness = 0
  
       game = AI(width,height)
+
       game.train_AI(genome1,genome2,config)
+
+    print('testing')
 
     game.test_ai(genome1, config)
 

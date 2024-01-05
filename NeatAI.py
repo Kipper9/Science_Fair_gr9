@@ -12,29 +12,39 @@ class AI:
     self.used = set()
     self.total = 0
 
+  def reset(self):
+    self.used = set()
+    self.total = 0
   def test_ai(self, genome, config):
     net = neat.nn.FeedForwardNetwork.create(genome, config)
     while not self.game.isGameOver():
       turn = 1
 
       while turn == 1:
-        p1_move = [int(input('What row: ')),int(input('What column: '))]
-        state = self.game.gameStep(p1_move, turn)
-        self.game.draw_board(turn)
-        pos = self.game.invert_move(p1_move)
-        self.used.add(pos)
-        print()
-        if state[1] == True:
-          turn = 2
-          self.game.isTurnOver = False
-        if state[2] == True:
+        if self.game.isGameOver():
           break
+        rangea = 41 - len(self.used)
+        if rangea < 0:
+          break
+        lista = list(self.used)
+        lista.sort()
+        decision = random.randint(0, rangea)
+        for i in lista:
+          if i <= decision:
+            decision += 1
+        self.used.add(decision)
 
+        move = self.interpret_input(decision)
+
+        state = self.game.gameStep(move, turn)
+
+      if self.game.isGameOver():
+        break
       self.turns(net, 2)
-      self.game.draw_board(turn)
-      print()
     
-    print('Score:',state[0])
+    genome.fitness += self.game.points[1]
+
+
 
   def train_AI(self,genome1,genome2,config):
     net1 = neat.nn.FeedForwardNetwork.create(genome1,config)
@@ -60,7 +70,6 @@ class AI:
       self.game.isTurnOver = False
   
   def turns(self, net, turn):
-    state = [0,0,0,0,0]
     while not self.game.isTurnOver:
       output = net.activate(self.game.ai_input())
 
@@ -73,7 +82,7 @@ class AI:
         if rangea < 0:
           break
         lista = list(self.used)
-        lista.sort
+        lista.sort()
         decision = random.randint(0, rangea)
         for i in lista:
           if i <= decision:
@@ -133,15 +142,17 @@ def eval_genomes(genomes,config):
       game = AI(width,height)
       game.train_AI(genome1,genome2,config)
 
+    game.test_ai(genome1, config)
+
 def run_neat(config):
-  # p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-19")
+  # p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-2185")
   p = neat.Population(config)
   p.add_reporter(neat.StdOutReporter(True))
   stats = neat.StatisticsReporter()
   p.add_reporter(stats)
-  p.add_reporter(neat.Checkpointer(1))
+  p.add_reporter(neat.Checkpointer(50))
 
-  winner = p.run(eval_genomes, 50)
+  winner = p.run(eval_genomes, 100)
   with open ('data/best.pickle','wb') as f:
     pickle.dump(winner, f)
 

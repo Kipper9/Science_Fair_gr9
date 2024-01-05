@@ -134,8 +134,6 @@ def eval_genomes(genomes,config):
  
       game = AI(width,height)
       game.train_AI(genome1,genome2,config)
-      if game.total != 16:
-        print("('_')")
 
 
   print(f'{totale} games were played by genome 1.')
@@ -148,7 +146,7 @@ def run_neat(config):
   p.add_reporter(stats)
   p.add_reporter(neat.Checkpointer(1))
 
-  winner = p.run(eval_genomes, 1)
+  winner = p.run(eval_genomes, 50)
   with open ('best.pickle','wb') as f:
     pickle.dump(winner, f)
 

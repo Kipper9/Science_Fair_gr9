@@ -110,3 +110,4 @@ class DotsAndBoxes:
     self.points = [0,0]
     self.isTurnOver = False
     self.grid = self.makeGrid()
+    self.completeSquares = 0

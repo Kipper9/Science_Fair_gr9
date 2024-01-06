@@ -36,7 +36,7 @@ class Game:
     return grid
 
   def get_genome(self):
-    with open('bester.pickle','rb') as f:
+    with open('data/genome_100.pickle','rb') as f:
       self.winner = pickle.load(f)
 
   def draw_board(self):
@@ -137,6 +137,7 @@ class Game:
 
     while self.run:
       self.draw_board()
+      time.sleep(0.5)
       self.turn = 1
       while self.turn == 1:
         for event in pygame.event.get():
@@ -171,6 +172,7 @@ class Game:
         self.run = False
 
       self.draw_board()
+      time.sleep(0.5)
           
       net = neat.nn.FeedForwardNetwork.create(self.winner,self.config)
 

@@ -20,12 +20,10 @@ class AI:
     net = neat.nn.FeedForwardNetwork.create(genome, config)
     
     while not self.game.isGameOver():
-      print('game is not over')
 
       turn = 1
 
       while turn == 1:
-        print('random')
         if self.game.isGameOver():
           break
 
@@ -147,7 +145,6 @@ def eval_genomes(genomes,config):
     genome.fitness = 0
 
   for i,(genome_id1, genome1) in enumerate(genomes):
-    print('New genome')
 
     if i  == len(genomes) - 1:
       break
@@ -168,21 +165,20 @@ def eval_genomes(genomes,config):
     game.test_ai(genome1, config, width, height)
 
 def run_neat(config):
-  # p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-2185")
-  p = neat.Population(config)
+  p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-96")
+  # p = neat.Population(config)
   p.add_reporter(neat.StdOutReporter(True))
   stats = neat.StatisticsReporter()
   p.add_reporter(stats)
-  p.add_reporter(neat.Checkpointer(50))
+  p.add_reporter(neat.Checkpointer(6))
 
-  winner = p.run(eval_genomes, 100)
-  with open ('data/best.pickle','wb') as f:
+  winner = p.run(eval_genomes, 105)
+  with open ('data/genome_.pickle','wb') as f:
     pickle.dump(winner, f)
 
 def test_AI(config):
   with open('data/best.pickle','rb') as f:
     winner = pickle.load(f)
-
   game = AI(5,5)
 
   game.test_ai(winner, config)

@@ -141,8 +141,12 @@ class AI:
 def eval_genomes(genomes,config):
   width, height = 5, 5
 
-  for (i,genome) in genomes:
+  for (id,genome) in genomes:
     genome.fitness = 0
+
+    game = AI(width, height)
+
+    game.test_ai(genome, config, width, height)
 
   for i,(genome_id1, genome1) in enumerate(genomes):
 
@@ -161,18 +165,15 @@ def eval_genomes(genomes,config):
 
       game.train_AI(genome1, genome2, config)
 
-    game = AI(width, height)
-    game.test_ai(genome1, config, width, height)
-
 def run_neat(config):
-  p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-96")
+  p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-2499")
   # p = neat.Population(config)
   p.add_reporter(neat.StdOutReporter(True))
   stats = neat.StatisticsReporter()
   p.add_reporter(stats)
-  p.add_reporter(neat.Checkpointer(6))
+  p.add_reporter(neat.Checkpointer(100))
 
-  winner = p.run(eval_genomes, 105)
+  winner = p.run(eval_genomes, 1001)
   with open ('data/genome_.pickle','wb') as f:
     pickle.dump(winner, f)
 

@@ -27,7 +27,7 @@ class AI:
         if self.game.isGameOver():
           break
 
-        rangea = 41 - len(self.used)
+        rangea = 2 * ((self.r - 1) * self.c) - len(self.used)
 
         if rangea < 0:
           break
@@ -91,7 +91,7 @@ class AI:
       decision = newoutput.index(max(newoutput))
       
       if decision in self.used:
-        rangea = 41 - len(self.used)
+        rangea =  2 * ((self.r - 1) * self.c) + 1 - len(self.used)
         if rangea < 0:
           break
         lista = list(self.used)
@@ -117,15 +117,15 @@ class AI:
   def interpret_input(self,input1):
     row = 0
     x = 0
-    n = 3
+    n = self.c  - 1
 
-    while x + n < input1:
+    while x + n <= input1:
       if row % 2 == 0:
         x += self.c - 1
-        n = 4
+        n = self.c
       else:
         x += self.c
-        n = 3
+        n = self.c - 1
       
       row += 1
     
@@ -139,7 +139,7 @@ class AI:
     self.total = points1 + points2
 
 def eval_genomes(genomes,config):
-  width, height = 5, 5
+  width, height = 4, 4
 
   for (id,genome) in genomes:
     genome.fitness = 0
@@ -149,7 +149,6 @@ def eval_genomes(genomes,config):
     game.test_ai(genome, config, width, height)
 
   for i,(genome_id1, genome1) in enumerate(genomes):
-
     if i  == len(genomes) - 1:
       break
 
@@ -166,8 +165,8 @@ def eval_genomes(genomes,config):
       game.train_AI(genome1, genome2, config)
 
 def run_neat(config):
-  p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-2499")
-  # p = neat.Population(config)
+  # p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-2499")
+  p = neat.Population(config)
   p.add_reporter(neat.StdOutReporter(True))
   stats = neat.StatisticsReporter()
   p.add_reporter(stats)
@@ -180,7 +179,7 @@ def run_neat(config):
 def test_AI(config):
   with open('data/best.pickle','rb') as f:
     winner = pickle.load(f)
-  game = AI(5,5)
+  game = AI(4,4)
 
   game.test_ai(winner, config)
 
@@ -188,7 +187,7 @@ def test_AI(config):
 if __name__ == "__main__":
   local_dir = os.path.dirname(__file__)
 
-  config_path = os.path.join(local_dir, "config.txt")
+  config_path = os.path.join(local_dir, "data/new-config.txt")
 
   config = neat.Config(neat.DefaultGenome,neat.DefaultReproduction,\
     neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)

@@ -249,12 +249,12 @@ if __name__ == "__main__":
   config = neat.Config(neat.DefaultGenome,neat.DefaultReproduction,\
       neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)
 
-  game = Game(5, 5, config)
+  game = Game(4, 4, config)
 
-  game.get_genome()
-  # game.normal_game_loop()
+  # game.get_genome()
+  game.normal_game_loop()
   # game.ai_game_loop()
-  test_ai(game)
+  # test_ai(game)
   
 
 

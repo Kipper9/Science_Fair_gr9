@@ -36,7 +36,7 @@ class Game:
     return grid
 
   def get_genome(self):
-    with open('data/genome_3500.pickle','rb') as f:
+    with open('data/genome_.pickle','rb') as f:
       self.winner = pickle.load(f)
 
   def draw_board(self):
@@ -178,7 +178,7 @@ class Game:
 
       self.trainer.turns(net,2)
       self.turn = 1
-      if self.trainer.game.points[0] + self.trainer.game.points[1] == 16:
+      if self.trainer.game.points[0] + self.trainer.game.points[1] == 9:
         self.run = False
     points = self.trainer.game.points
     self.run = True
@@ -239,23 +239,23 @@ def test_ai(game):
   print(f"The AI totaled {totalpoints} points")
   print(f"The AI won {wins} times agains't a randomized player")
 
-if __name__ == "__main__":
-  pygame.init()
 
-  local_dir = os.path.dirname(__file__)
+pygame.init()
 
-  config_path = os.path.join(local_dir, "config.txt")
+local_dir = os.path.dirname(__file__)
 
-  config = neat.Config(neat.DefaultGenome,neat.DefaultReproduction,\
-      neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)
+config_path = os.path.join(local_dir, "data/new-config.txt")
 
-  game = Game(4, 4, config)
+config = neat.Config(neat.DefaultGenome,neat.DefaultReproduction,\
+    neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)
 
-  # game.get_genome()
-  game.normal_game_loop()
-  # game.ai_game_loop()
-  # test_ai(game)
-  
+game = Game(4, 4, config)
+
+game.get_genome()
+# game.normal_game_loop()
+game.ai_game_loop()
+# test_ai(game)
 
 
-  pygame.quit()
+
+pygame.quit()

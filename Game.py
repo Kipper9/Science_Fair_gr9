@@ -6,8 +6,8 @@ class DotsAndBoxes:
     self.isTurnOver = False
     self.grid = self.makeGrid()
     self.isMoveValid = True
+
   def makeGrid(self):
-  
     grid = []
     for i in range(0,(self.rows-1)*2+1):
       grid.append([])
@@ -25,6 +25,37 @@ class DotsAndBoxes:
       for x in i:
         output.append(x)
     return output
+
+  def open_box_count(self):
+    y = 0
+
+    checks = [
+      [0,0],
+      [1,0],
+      [1,1],
+      [2,0],
+      ]
+    
+    total_count = 0
+
+    layer = 0
+
+    for i in range(0,9):
+      count = 0
+      for x in checks:
+        if self.grid[x[0] + layer][x[1] + (i - y)] == 0:
+          count += 1
+
+        if count == 2:
+          break
+
+      if count == 1:
+        total_count += 1
+      
+      if (i+1) % 3 == 0 and i != 0:
+        layer += 2
+        y += 3
+    return total_count
 
   def isGameOver(self):
     if  self.points[0] + self.points[1] == (self.rows - 1) * (self.cols - 1):
@@ -96,7 +127,7 @@ class DotsAndBoxes:
           if self.grid[row-1][col] != 0 and self.grid[row+1][col] != 0 and self.grid[row][col+1] != 0:
             self.points[turn - 1] += 1
             self.isTurnOver = False
-
+            
   def gameStep(self,action,turn):
     self.click(action[0],action[1],turn)
     return self.points, self.isTurnOver, self.isGameOver(), self.grid, self.isMoveValid

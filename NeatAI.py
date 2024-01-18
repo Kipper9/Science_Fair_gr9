@@ -66,6 +66,8 @@ class AI:
     while True:
       self.turns(net1, 1)
       
+      genome1.fitness -= self.game.open_box_count()
+
       if self.game.isGameOver():
         self.calculate_fitness(genome1, genome2, self.game.points[0], self.game.points[1])
         self.game.reset()
@@ -75,6 +77,8 @@ class AI:
 
       self.turns(net2, 2)
       
+      genome2.fitness -= self.game.open_box_count()
+
       if self.game.isGameOver():
         self.calculate_fitness(genome1, genome2, self.game.points[0], self.game.points[1])
         self.game.reset()
@@ -165,8 +169,8 @@ def eval_genomes(genomes,config):
       game.train_AI(genome1, genome2, config)
 
 def run_neat(config):
-  p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-85")
-  # p = neat.Population(config)
+  # p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-85")
+  p = neat.Population(config)
   p.add_reporter(neat.StdOutReporter(True))
   stats = neat.StatisticsReporter()
   p.add_reporter(stats)

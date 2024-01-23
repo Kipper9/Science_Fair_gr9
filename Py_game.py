@@ -36,7 +36,7 @@ class Game:
     return grid
 
   def get_genome(self):
-    with open('data/genome_1100.pickle','rb') as f:
+    with open('data/genome_1000.pickle','rb') as f:
       self.winner = pickle.load(f)
 
   def draw_board(self):
@@ -253,9 +253,9 @@ config = neat.Config(neat.DefaultGenome,neat.DefaultReproduction,\
 game = Game(4, 4, config)
 
 game.get_genome()
-game.normal_game_loop()
+# game.normal_game_loop()
 # game.ai_game_loop()
-# test_ai(game)
+test_ai(game)
 
 
 

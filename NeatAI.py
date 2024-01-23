@@ -169,15 +169,15 @@ def eval_genomes(genomes,config):
       game.train_AI(genome1, genome2, config)
 
 def run_neat(config):
-  # p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-85")
-  p = neat.Population(config)
+  p = neat.Checkpointer.restore_checkpoint("neat-checkpoint-900")
+  # p = neat.Population(config)
   p.add_reporter(neat.StdOutReporter(True))
   stats = neat.StatisticsReporter()
   p.add_reporter(stats)
-  p.add_reporter(neat.Checkpointer(100))
+  p.add_reporter(neat.Checkpointer(1))
 
-  winner = p.run(eval_genomes, 1054)
-  with open ('data/genome_.pickle','wb') as f:
+  winner = p.run(eval_genomes, 101)
+  with open ('data/genome_1000.pickle','wb') as f:
     pickle.dump(winner, f)
 
 def test_AI(config):
